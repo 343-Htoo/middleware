@@ -34,7 +34,7 @@
                                 <td>
                                     @if (Auth::user()->userType === 'admin')
                                         <a href="{{ route('permission.edit', $permission->id) }}"
-                                            class="btn btn-info btn-sm"></a>
+                                            class="btn btn-info btn-sm">Edit</a>
                                         <a href="{{ route('permission.delete', $permission->id) }}"
                                             class="btn btn-danger btn-sm">Delete</a>
                                         <a href="{{ route('permission.view', $permission->id) }}"
