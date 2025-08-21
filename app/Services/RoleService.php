@@ -33,4 +33,11 @@ class RoleService
        return  Role::find($id);
     }
 
+     public function getDelete($id){
+        
+        $role = Role::find($id);
+        $role->delete($id);
+        return $role;
+    }
+
 }

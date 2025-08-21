@@ -32,9 +32,15 @@
                     </li>
                     @else
 
-                     <li class="nva-item">
-                        <a href="nav-link" class="text-success">Your are custom</a>
+                     @if(Auth::user()->userType === 'teacher')
+                     <li class="nav-item">
+                        <a href="{{route('student.index')}}" class="nav-link">Add Student</a>
                      </li>
+                     <li>
+                        <a class="nav-link" href="{{route('class.index')}}" >Add Class</a>
+                     </li>
+                     @endif
+                       <li>Hello world</li>
 
                     @endif
                 </ul>

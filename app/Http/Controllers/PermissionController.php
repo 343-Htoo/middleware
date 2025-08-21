@@ -22,14 +22,13 @@ class PermissionController extends Controller
     }
     // create
     public function store(Request $request){
+        Gate::authorize('store-permission');
        $this->permissionService->create($request->all());
        return redirect()->route('permission.index');
     }
     // edit
     public function edit($id){
-            if (Gate::denies('create_user')) {
-        abort(403, 'You do not have permission to create users.');
-    }
+           Gate::authorize('edit-permission');
 
         $permission = $this->permissionService->getId($id);
         return view('permissions.edit' , compact('permission'));
@@ -37,10 +36,7 @@ class PermissionController extends Controller
 
     // update
     public function update(Request $request , $id){
-            if (Gate::denies('update_user')) {
-        abort(403, 'You do not have permission to create users.');
-    }
-
+        Gate::authorize('update-permission');
         $this->permissionService->getUpdate($request->all() , $id);
         return redirect()->route('permission.index');
 
@@ -48,9 +44,7 @@ class PermissionController extends Controller
 
     // delete
     public function delete($id){
-            if (Gate::denies('delete_user')) {
-        abort(403, 'You do not have permission to create users.');
-    }
+           Gate::authorize('delete-permission');
 
         $this->permissionService->getDelete($id);
         return redirect()->route('permission.index');
@@ -58,9 +52,7 @@ class PermissionController extends Controller
 
     // view
     public function show($id){
-            if (Gate::denies('delete_user')) {
-        abort(403, 'You do not have permission to create users.');
-    }
+        Gate::authorize('view-permission');
 
         $permission = $this->permissionService->getId($id);
         return view('permissions.show' , compact('permission'));

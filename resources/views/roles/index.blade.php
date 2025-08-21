@@ -64,7 +64,7 @@
                                 <a href="" class="btn btn-danger btn-sm">Delete</a>
                                 <a href="" class="btn btn-success btn-sm">View</a>
                                 @endif
-                                
+
                             </td>
                         </tr>
                     @endforeach
@@ -102,7 +102,7 @@
                             <td>
                                 @if (Auth::user()->userType === 'admin')
                                 <a href="{{route('role.edit' , $role->id)}}" class="btn btn-info btn-sm">Edit</a>
-                                <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{{route('role.')}}" class="btn btn-danger btn-sm">Delete</a>
                                 <a href="" class="btn btn-success btn-sm">View</a>
                                 @endif
 

@@ -32,16 +32,19 @@
                                 <td>{{ $permission->id }}</td>
                                 <td>{{ $permission->name }}</td>
                                 <td>
-                                    @if (Auth::user()->userType === 'admin')
+                                    @can('edit-permission')
                                         <a href="{{ route('permission.edit', $permission->id) }}"
                                             class="btn btn-info btn-sm">Edit</a>
+                                    @endcan
+
+                                    @can('delete-permission')
                                         <a href="{{ route('permission.delete', $permission->id) }}"
                                             class="btn btn-danger btn-sm">Delete</a>
+                                    @endcan
+                                    @can('view-permission')
                                         <a href="{{ route('permission.view', $permission->id) }}"
                                             class="btn btn-success btn-sm">View</a>
-                                    @else
-                                        <a href="{{ route('login') }}" class="btn btn-warning">Login</a>
-                                    @endif
+                                    @endcan
 
                                 </td>
                             </tr>
