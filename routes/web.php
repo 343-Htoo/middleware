@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserdataController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\PermissionController;
@@ -44,31 +43,31 @@ Route::middleware('auth')->group(function () {
 
 // User routes
 
-    Route::get('/user', [UserdataController::class, 'index'])->name('user.index');
-    Route::post('/user', [UserdataController::class, 'store'])->name('user.store');
-    Route::get('/user/{id}', [UserdataController::class, 'edit'])->name('user.edit');
-    Route::post('/user/{id}', [UserdataController::class, 'update'])->name('user.update');
-    Route::get('/user/delete/{id}', [UserdataController::class, 'delete'])->name('user.delete');
-    Route::get('/user/view/{id}', [UserdataController::class, 'show'])->name('user.view');
+    Route::get('/user', [UserdataController::class, 'index'])->name('user.index')->middleware('can:view .user');
+    Route::post('/user', [UserdataController::class, 'store'])->name('user.store')->middleware('can:store.user');
+    Route::get('/user/{id}', [UserdataController::class, 'edit'])->name('user.edit')->middleware('can:edit .user');
+    Route::post('/user/{id}', [UserdataController::class, 'update'])->name('user.update')->middleware('can:update .user');
+    Route::get('/user/delete/{id}', [UserdataController::class, 'delete'])->name('user.delete')->middleware('can:delete .user');
+    Route::get('/user/view/{id}', [UserdataController::class, 'show'])->name('user.view')->middleware('can:view .user');
 
 
 
-    Route::get('/class', [ClassroomController::class, 'index'])->name('class.index');
-    Route::post('/class', [ClassroomController::class, 'store'])->name('class.store');
-    Route::get('/class/{id}', [ClassroomController::class, 'edit'])->name('class.edit');
-    Route::post('/class/{id}', [ClassroomController::class, 'update'])->name('class.update');
-    Route::get('/class/delete/{id}', [ClassroomController::class, 'delete'])->name('class.delete');
-    Route::get('/class/view/{id}', [ClassroomController::class, 'show'])->name('class.view');
+    Route::get('/class', [ClassroomController::class, 'index'])->name('class.index')->middleware('can:view.teacher');
+    Route::post('/class', [ClassroomController::class, 'store'])->name('class.store')->middleware('can:store.teacher');
+    Route::get('/class/{id}', [ClassroomController::class, 'edit'])->name('class.edit')->middleware('can:edit.teacher');
+    Route::post('/class/{id}', [ClassroomController::class, 'update'])->name('class.update')->middleware('can:update.teacher');
+    Route::get('/class/delete/{id}', [ClassroomController::class, 'delete'])->name('class.delete')->middleware('can:destory.teacher');
+    Route::get('/class/view/{id}', [ClassroomController::class, 'show'])->name('class.show')->middleware('can:view.teacher');
 
 
- Route::get('/student', [TeacherController::class, 'index'])->name('student.index');
-Route::post('/student', [TeacherController::class, 'store'])->name('student.store');
-Route::get('/student/{id}/edit', [TeacherController::class, 'edit'])->name('student.edit');
-Route::post('/student/{id}', [TeacherController::class, 'update'])->name('student.update');
-Route::get('/student/delete/{id}', [TeacherController::class, 'delete'])->name('student.delete');
-Route::get('/student/view/{id}', [TeacherController::class, 'show'])->name('student.view');
-
-
+    // Student Routes
+Route::get('/student', [StudentController::class, 'index'])->name('student.index')->middleware('can:view.teacher');
+Route::get('/student/create', [StudentController::class, 'create'])->name('student.create')->middleware('can:create.teacher');
+Route::post('/student', [StudentController::class, 'store'])->name('student.store')->middleware('can:store.teacher');
+Route::get('/student/{id}', [StudentController::class, 'show'])->name('student.show')->middleware('can:show.teacher');
+Route::get('/student/{id}/edit', [StudentController::class, 'edit'])->name('student.edit')->middleware('can:edit.teacher');
+Route::put('/student/{id}', [StudentController::class, 'update'])->name('student.update')->middleware('can:update.teacher');
+Route::delete('/student/{id}', [StudentController::class, 'destroy'])->name('student.destroy')->middleware('can:destory.teacher');
 
 
 require __DIR__.'/auth.php';

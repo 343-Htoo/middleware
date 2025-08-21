@@ -22,10 +22,10 @@ class ClassroomController extends Controller
     }
 
     // Show create form
-    public function create()
-    {
-        return view('classroom.create');
-    }
+    // public function create()
+    // {
+    //     return view('classroom.create');
+    // }
 
     // Store new classroom
     public function store(Request $request)
@@ -35,14 +35,14 @@ class ClassroomController extends Controller
         ]);
 
         $this->classroomService->create($request->all());
-        return redirect()->route('class.index')->with('success', 'Classroom created successfully.');
+        return redirect()->route('class.index');
     }
 
     // Show classroom details
     public function show($id)
     {
         $classroom = $this->classroomService->getById($id);
-        return view('classroom.show', compact('classroom'));
+        return view('classroom.view', compact('classroom'));
     }
 
     // Show edit form

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserdataService;
+use Illuminate\Support\Facades\Gate;
 
 class UserdataController extends Controller
 {
@@ -14,12 +15,14 @@ class UserdataController extends Controller
     }
 
     public function index(){
+        Gate::authorize('index-user');
         $datas = $this->userdataService->getAll();
         $roles = $this->userdataService->getRole();
         return view('users.index', compact('roles', 'datas'));
     }
 
     public function store(Request $request){
+         Gate::authorize('store-user');
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:userdatas,email',
@@ -38,11 +41,13 @@ class UserdataController extends Controller
     }
 
     public function edit($id){
+         Gate::authorize('edit-user');
         $user = $this->userdataService->getId($id);
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, $id){
+         Gate::authorize('update-user');
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:userdatas,email,' . $id,
@@ -61,11 +66,13 @@ class UserdataController extends Controller
     }
 
     public function delete($id){
+         Gate::authorize('delete-user');
         $this->userdataService->getDelete($id);
         return redirect()->route('user.index');
     }
 
     public function show($id){
+         Gate::authorize('show-user');
         $user = $this->userdataService->getId($id);
         return view('users.view', compact('user'));
     }

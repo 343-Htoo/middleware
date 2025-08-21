@@ -2,78 +2,91 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\StudentService;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
+use App\Services\StudentService;
+use App\Services\ClassroomService;
+use Illuminate\Support\Facades\Gate;
 
 class StudentController extends Controller
 {
     protected $studentService;
+    protected $classroomService;
 
-    public function __construct(StudentService $studentService)
+    public function __construct(StudentService $studentService, ClassroomService $classroomService)
     {
         $this->studentService = $studentService;
+        $this->classroomService = $classroomService;
     }
-
-    // List all students
+    // List students
     public function index()
     {
-        $students = $this->studentService->getAll();
-        $classrooms = $this->studentService->getClass();
 
-        return view('student.index', compact('students', 'classrooms'));
+         Gate::authorize('view-teacher');
+        $students = $this->studentService->getAll();
+         $classrooms = Classroom::all();
+        return view('student.index', compact('students' , 'classrooms'));
     }
 
-    // Show form to create a student
+    // Show create form
     public function create()
     {
-        $classrooms = $this->studentService->getClass();
+         Gate::authorize('create-teacher');
+        $classrooms = $this->classroomService->getAll();
         return view('student.create', compact('classrooms'));
     }
 
     // Store new student
     public function store(Request $request)
     {
-        // Validate the input
-       $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'classroom_id' => 'required|exists:classrooms,id'
+         Gate::authorize('store-teacher');
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'address'  => 'required|string|max:255',
+            'phone'    => 'required|string|max:20',
+            'class_id' => 'required|exists:classrooms,id',
         ]);
 
-
-        $data = $this->studentService->create($request->all());
-
+        $this->studentService->create($request->all());
         return redirect()->route('student.index')->with('success', 'Student created successfully.');
     }
 
-    // Edit student
+    // Show student details
+    public function show($id)
+    {
+         Gate::authorize('view-teacher');
+        $student = $this->studentService->getById($id);
+        return view('student.view', compact('student'));
+    }
+
+    // Show edit form
     public function edit($id)
     {
-        $student = $this->studentService->getId($id);
-        $classrooms = $this->studentService->getClass();
-
+         Gate::authorize('edit-teacher');
+        $student = $this->studentService->getById($id);
+        $classrooms = $this->classroomService->getAll();
         return view('student.edit', compact('student', 'classrooms'));
     }
 
     // Update student
     public function update(Request $request, $id)
     {
+         Gate::authorize('update-teacher');
         $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'classroom_id' => 'required|exists:classrooms,id'
+            'name'     => 'required|string|max:255',
+            'address'  => 'required|string|max:255',
+            'phone'    => 'required|string|max:20',
+            'class_id' => 'required|exists:classrooms,id',
         ]);
 
         $this->studentService->update($request->all(), $id);
-
         return redirect()->route('student.index')->with('success', 'Student updated successfully.');
     }
 
     // Delete student
     public function destroy($id)
     {
+         Gate::authorize('destory-teacher');
         $this->studentService->delete($id);
         return redirect()->route('student.index')->with('success', 'Student deleted successfully.');
     }
